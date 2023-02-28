@@ -9,8 +9,8 @@ public record CreateGameOutput(String gameId, List<RoundOutput> round){
             final String gameId,
             final Round round
     ) {
-        final var firstMovieOutput = RoundOutput.from(round.firstMovie().getId(), round.firstMovie().getTittle());
-        final var secondMovieOutput = RoundOutput.from(round.secondMovie().getId(), round.secondMovie().getTittle());
+        final var firstMovieOutput = RoundOutput.from(round.getFirstMovie().getId(), round.getFirstMovie().getTittle());
+        final var secondMovieOutput = RoundOutput.from(round.getSecondMovie().getId(), round.getSecondMovie().getTittle());
 
         return new CreateGameOutput(gameId, List.of(firstMovieOutput, secondMovieOutput));
     }

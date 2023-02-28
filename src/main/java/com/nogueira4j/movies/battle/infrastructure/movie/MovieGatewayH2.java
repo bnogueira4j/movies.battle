@@ -1,9 +1,9 @@
-package com.nogueira4j.movies.battle.infrastructure.game;
+package com.nogueira4j.movies.battle.infrastructure.movie;
 
-import com.nogueira4j.movies.battle.domain.game.Movie;
-import com.nogueira4j.movies.battle.domain.game.MovieGateway;
-import com.nogueira4j.movies.battle.infrastructure.game.persistence.MovieJpaEntity;
-import com.nogueira4j.movies.battle.infrastructure.game.persistence.MovieRepository;
+import com.nogueira4j.movies.battle.domain.movie.Movie;
+import com.nogueira4j.movies.battle.domain.movie.MovieGateway;
+import com.nogueira4j.movies.battle.infrastructure.movie.persistence.MovieJpaEntity;
+import com.nogueira4j.movies.battle.infrastructure.movie.persistence.MovieRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

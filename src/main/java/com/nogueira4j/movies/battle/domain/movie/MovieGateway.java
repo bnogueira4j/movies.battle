@@ -1,4 +1,4 @@
-package com.nogueira4j.movies.battle.domain.game;
+package com.nogueira4j.movies.battle.domain.movie;
 
 import java.util.List;
 import java.util.Optional;

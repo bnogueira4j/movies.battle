@@ -1,6 +1,5 @@
-package com.nogueira4j.movies.battle.infrastructure.game.persistence;
+package com.nogueira4j.movies.battle.infrastructure.rank.persistence;
 
-import com.nogueira4j.movies.battle.domain.game.Round;
 import com.nogueira4j.movies.battle.domain.rank.Rank;
 
 import javax.persistence.Column;

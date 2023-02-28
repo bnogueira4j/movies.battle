@@ -1,7 +1,6 @@
-package com.nogueira4j.movies.battle.infrastructure.game.persistence;
+package com.nogueira4j.movies.battle.infrastructure.movie.persistence;
 
-import com.nogueira4j.movies.battle.domain.game.Movie;
-import com.nogueira4j.movies.battle.domain.rank.Rank;
+import com.nogueira4j.movies.battle.domain.movie.Movie;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

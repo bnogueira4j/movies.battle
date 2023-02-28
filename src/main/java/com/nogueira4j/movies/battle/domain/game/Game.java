@@ -17,11 +17,11 @@ public class Game {
     private final String playerId;
     private boolean isFinished;
 
-    private Game(final String playerId) {
+    private Game(final String playerId, List<Round> rounds) {
         this.id = UUID.randomUUID();
         this.score = 0;
         this.errors = 0;
-        this.rounds = List.of();
+        this.rounds = rounds;
         this.playerId = playerId;
         this.isFinished = false;
     }
@@ -41,9 +41,10 @@ public class Game {
     }
 
     public static Game with(
-            final String playerId
+            final String playerId,
+            final Round round
     ) {
-        return new Game(playerId);
+        return new Game(playerId, List.of(round));
     }
 
     public static Game with(
@@ -89,7 +90,7 @@ public class Game {
     }
 
     public void finished() {
-        isFinished = true;
+        this.isFinished = true;
     }
 
     public Game addRound(Round round) {
@@ -119,8 +120,8 @@ public class Game {
         if(checkRoundExists(newRound)) {
             throw RoundAlreadyExistsException.with(
                     getId().toString(),
-                    newRound.firstMovie().getId(),
-                    newRound.secondMovie().getId()
+                    newRound.getFirstMovie().getId(),
+                    newRound.getSecondMovie().getId()
             );
         }
     }

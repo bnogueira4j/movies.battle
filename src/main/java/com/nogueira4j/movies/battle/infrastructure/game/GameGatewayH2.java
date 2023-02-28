@@ -2,13 +2,13 @@ package com.nogueira4j.movies.battle.infrastructure.game;
 
 import com.nogueira4j.movies.battle.domain.game.Game;
 import com.nogueira4j.movies.battle.domain.game.GameGateway;
-import com.nogueira4j.movies.battle.domain.game.MovieGateway;
+import com.nogueira4j.movies.battle.domain.movie.MovieGateway;
 import com.nogueira4j.movies.battle.domain.game.Round;
 import com.nogueira4j.movies.battle.infrastructure.game.persistence.GameJpaEntity;
 import com.nogueira4j.movies.battle.infrastructure.game.persistence.GameRepository;
 import org.springframework.stereotype.Component;
 
-import java.security.InvalidParameterException;
+import java.util.Optional;
 
 @Component
 public class GameGatewayH2 implements GameGateway {
@@ -33,11 +33,9 @@ public class GameGatewayH2 implements GameGateway {
     }
 
     @Override
-    public Game findById(String id) {
+    public Optional<Game> findById(String id) {
         final var game = gameRepository.findById(id);
-        if(game.isPresent())
-            return game.get().toAggregate();
-        throw new InvalidParameterException("");
+            return game.map(GameJpaEntity::toAggregate);
     }
 
     @Override

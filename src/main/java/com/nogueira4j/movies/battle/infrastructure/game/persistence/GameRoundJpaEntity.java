@@ -1,5 +1,6 @@
 package com.nogueira4j.movies.battle.infrastructure.game.persistence;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -13,6 +14,9 @@ public class GameRoundJpaEntity {
     @EmbeddedId
     private GameRoundID id;
 
+    @Column(name = "status", nullable = false)
+    private String status;
+
     @ManyToOne
     @MapsId("gameId")
     private GameJpaEntity game;
@@ -20,13 +24,14 @@ public class GameRoundJpaEntity {
     public GameRoundJpaEntity() {
     }
 
-    public GameRoundJpaEntity(final GameJpaEntity game, final RoundID roundId) {
+    public GameRoundJpaEntity(final GameJpaEntity game, final RoundID roundId, final String status) {
         this.id = GameRoundID.from(game.getId(), roundId);
         this.game = game;
+        this.status = status;
     }
 
-    public static GameRoundJpaEntity from(final GameJpaEntity game, final RoundID roundId) {
-        return new GameRoundJpaEntity(game, roundId);
+    public static GameRoundJpaEntity from(final GameJpaEntity game, final RoundID roundId, final String status) {
+        return new GameRoundJpaEntity(game, roundId, status);
     }
 
     @Override
@@ -56,5 +61,13 @@ public class GameRoundJpaEntity {
 
     public void setGame(GameJpaEntity game) {
         this.game = game;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

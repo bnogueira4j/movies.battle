@@ -10,8 +10,8 @@ public class NotFoundException extends DomainException {
             final String id
     ) {
         final var anError = "%s with ID %s was not found".formatted(
-                id,
-                aggregate.getSimpleName()
+                aggregate.getSimpleName(),
+                id
         );
         return new NotFoundException(anError);
     }

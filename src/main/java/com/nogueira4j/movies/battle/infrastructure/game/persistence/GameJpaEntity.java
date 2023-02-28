@@ -1,7 +1,7 @@
 package com.nogueira4j.movies.battle.infrastructure.game.persistence;
 
 import com.nogueira4j.movies.battle.domain.game.Game;
-import com.nogueira4j.movies.battle.domain.game.Movie;
+import com.nogueira4j.movies.battle.domain.movie.Movie;
 import com.nogueira4j.movies.battle.domain.game.Round;
 
 import javax.persistence.CascadeType;
@@ -70,8 +70,8 @@ public class GameJpaEntity {
     }
 
     private void addRound(final Round round) {
-        final var roundId = RoundID.from(round.firstMovie().getId(), round.secondMovie().getId());
-        this.rounds.add(GameRoundJpaEntity.from(this, roundId));
+        final var roundId = RoundID.from(round.getFirstMovie().getId(), round.getSecondMovie().getId());
+        this.rounds.add(GameRoundJpaEntity.from(this, roundId, round.getStatusRound().name()));
     }
 
     public List<Round> getAggregateRounds() {
@@ -83,7 +83,8 @@ public class GameJpaEntity {
                                 ),
                                 Movie.with(
                                         it.getId().getRoundId().getSecondMovieId()
-                        )
+                                ),
+                                Round.StatusRound.valueOf(it.getStatus())
                 ))
                 .toList();
     }

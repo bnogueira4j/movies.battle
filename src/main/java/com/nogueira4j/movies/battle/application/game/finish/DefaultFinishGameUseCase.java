@@ -1,6 +1,6 @@
 package com.nogueira4j.movies.battle.application.game.finish;
 
-import com.nogueira4j.movies.battle.application.game.create.CreateGameOutput;
+import com.nogueira4j.movies.battle.domain.exceptions.NotFoundException;
 import com.nogueira4j.movies.battle.domain.game.Game;
 import com.nogueira4j.movies.battle.domain.game.GameGateway;
 import com.nogueira4j.movies.battle.domain.rank.Rank;
@@ -21,7 +21,11 @@ public class DefaultFinishGameUseCase extends FinishGameUseCase {
 
     @Override
     public FinishGameOutput execute(FinishGameCommand command) {
-        final var game = gameGateway.findById(command.gameId());
+        final var game = gameGateway.findById(command.gameId())
+                .orElseThrow(() -> NotFoundException.with(Game.class, command.gameId()));
+        game.finished();
+        gameGateway.update(game);
+
         final var rank = Rank.with(game.getPlayerId(), game.getScore());
         rankGateway.save(rank);
         return FinishGameOutput.from(game.getPlayerId(), game.getId().toString(), rank.scored());

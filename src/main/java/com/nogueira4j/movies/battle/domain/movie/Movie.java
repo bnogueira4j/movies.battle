@@ -1,4 +1,4 @@
-package com.nogueira4j.movies.battle.domain.game;
+package com.nogueira4j.movies.battle.domain.movie;
 
 import org.jmolecules.ddd.annotation.Entity;
 

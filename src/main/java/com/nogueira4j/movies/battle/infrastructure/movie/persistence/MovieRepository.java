@@ -1,5 +1,6 @@
-package com.nogueira4j.movies.battle.infrastructure.game.persistence;
+package com.nogueira4j.movies.battle.infrastructure.movie.persistence;
 
+import com.nogueira4j.movies.battle.infrastructure.movie.persistence.MovieJpaEntity;
 import org.jmolecules.ddd.annotation.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

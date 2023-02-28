@@ -1,9 +1,9 @@
-package com.nogueira4j.movies.battle.infrastructure.game;
+package com.nogueira4j.movies.battle.infrastructure.rank;
 
 import com.nogueira4j.movies.battle.domain.rank.Rank;
 import com.nogueira4j.movies.battle.domain.rank.RankGateway;
-import com.nogueira4j.movies.battle.infrastructure.game.persistence.RankJpaEntity;
-import com.nogueira4j.movies.battle.infrastructure.game.persistence.RankRepository;
+import com.nogueira4j.movies.battle.infrastructure.rank.persistence.RankJpaEntity;
+import com.nogueira4j.movies.battle.infrastructure.rank.persistence.RankRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

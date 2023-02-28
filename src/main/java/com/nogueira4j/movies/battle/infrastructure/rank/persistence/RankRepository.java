@@ -1,5 +1,6 @@
-package com.nogueira4j.movies.battle.infrastructure.game.persistence;
+package com.nogueira4j.movies.battle.infrastructure.rank.persistence;
 
+import com.nogueira4j.movies.battle.infrastructure.rank.persistence.RankJpaEntity;
 import org.jmolecules.ddd.annotation.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 

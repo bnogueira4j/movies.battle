@@ -25,8 +25,7 @@ public class DefaultCreateGameUseCase extends CreateGameUseCase {
         final var username = SecurityContextHolder.getContext().getAuthentication().getName();
         final var player = playerGateway.findByUsername(username).orElseThrow(() -> NotFoundException.with(Player.class, username));
         final var round = gameGateway.createRound();
-        final var game = Game.with(player.id().toString());
-        game.addRound(round);
+        final var game = Game.with(player.id().toString(), round);
 
         gameGateway.create(game);
         return CreateGameOutput.from(game.getId().toString(), round);
