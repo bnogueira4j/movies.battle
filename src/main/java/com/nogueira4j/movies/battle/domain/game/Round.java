@@ -45,10 +45,10 @@ public class Round {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Round round = (Round) o;
-        if (firstMovie.equals(round.getFirstMovie())
-                || firstMovie.equals(round.getSecondMovie())) {
-            return secondMovie.equals(round.getFirstMovie())
-                    || secondMovie.equals(round.getSecondMovie());
+        if (firstMovie.getId().equals(round.getFirstMovie().getId())
+                || firstMovie.getId().equals(round.getSecondMovie().getId())) {
+            return secondMovie.getId().equals(round.getFirstMovie().getId())
+                    || secondMovie.getId().equals(round.getSecondMovie().getId());
         }
         return false;
     }

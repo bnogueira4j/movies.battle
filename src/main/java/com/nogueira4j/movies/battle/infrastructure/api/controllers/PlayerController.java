@@ -1,7 +1,7 @@
 package com.nogueira4j.movies.battle.infrastructure.api.controllers;
 
-import com.nogueira4j.movies.battle.application.player.LoginPlayerCommand;
-import com.nogueira4j.movies.battle.application.player.LoginPlayerUseCase;
+import com.nogueira4j.movies.battle.application.player.login.LoginPlayerCommand;
+import com.nogueira4j.movies.battle.application.player.login.LoginPlayerUseCase;
 import com.nogueira4j.movies.battle.infrastructure.api.PlayerAPI;
 import com.nogueira4j.movies.battle.infrastructure.player.models.LoginPlayerRequest;
 import org.springframework.http.ResponseEntity;

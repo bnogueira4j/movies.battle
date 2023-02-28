@@ -1,7 +1,9 @@
 package com.nogueira4j.movies.battle.application.game.update;
 
 import com.nogueira4j.movies.battle.application.UserCaseTest;
+import com.nogueira4j.movies.battle.domain.exceptions.DomainException;
 import com.nogueira4j.movies.battle.domain.exceptions.NotFoundException;
+import com.nogueira4j.movies.battle.domain.exceptions.RoundAlreadyExistsException;
 import com.nogueira4j.movies.battle.domain.exceptions.ScoreErrorsExceededException;
 import com.nogueira4j.movies.battle.domain.game.Game;
 import com.nogueira4j.movies.battle.domain.game.GameGateway;
@@ -62,20 +64,19 @@ public class UpdateGameUseCaseTest extends UserCaseTest {
         final var loserMovie = Movie.with("movie2", "Movie 2", 5.5, 100L);
 
         final var expectedGameId = "39fbec72-b760-11ed-afa1-0242ac120002";
-        final var expectedMovieOne = Movie.with("movie3");
-        final var expectedMovieTwo = Movie.with("movie4");
         final var expectedSizeRounds = 2;
         final var expectedScore = 1;
         final var expectedError = 0;
-        final var expectRound = Round.with(expectedMovieOne, expectedMovieTwo);
+        final var expectedRound = Round.with(Movie.with("movie1"), Movie.with("movie2"));
+        final var expectedSecondRound = Round.with(Movie.with("movie3"), Movie.with("movie2"));
 
         final var game = Game.with(
                 UUID.fromString(expectedGameId),
                 0,
                 0,
                 List.of(Round.with(
-                        Movie.with("1"),
-                        Movie.with("2"))
+                        Movie.with("movie1"),
+                        Movie.with("movie2"))
                 ),
                 playerId,
                 false);
@@ -92,7 +93,8 @@ public class UpdateGameUseCaseTest extends UserCaseTest {
                 .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         when(gameGateway.createRound())
-                .thenReturn(expectRound);
+                .thenReturn(expectedRound)
+                .thenReturn(expectedSecondRound);
 
         final var aCommand =
                 UpdateGameCommand.with(expectedGameId, winningMovie.getId() , loserMovie.getId());
@@ -103,8 +105,8 @@ public class UpdateGameUseCaseTest extends UserCaseTest {
         // then
         Assertions.assertNotNull(actualOutput);
         Assertions.assertEquals(expectedSizeRounds, actualOutput.round().size());
-        Assertions.assertEquals(expectedMovieOne.getId(), actualOutput.round().get(0).movieId());
-        Assertions.assertEquals(expectedMovieTwo.getId(), actualOutput.round().get(1).movieId());
+        Assertions.assertEquals(expectedSecondRound.getFirstMovie().getId(), actualOutput.round().get(0).movieId());
+        Assertions.assertEquals(expectedSecondRound.getSecondMovie().getId(), actualOutput.round().get(1).movieId());
 
         Mockito.verify(gameGateway, times(1)).findById(any());
         Mockito.verify(movieGateway, times(2)).findById(any());
@@ -142,7 +144,7 @@ public class UpdateGameUseCaseTest extends UserCaseTest {
     }
 
     @Test
-    public void givenAValidGame_whenCallsUpdateGameAndMaximumError_shouldReturnScoreErrorsExceededException() {
+    public void givenAValidGame_whenCallsUpdateGameAndWithMaximumError_shouldReturnScoreErrorsExceededException() {
         // given
 
         when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -195,5 +197,94 @@ public class UpdateGameUseCaseTest extends UserCaseTest {
         Mockito.verify(gameGateway, times(1)).findById(any());
         Mockito.verify(movieGateway, times(2)).findById(any());
         Mockito.verify(gameGateway, times(1)).update(any());
+    }
+
+    @Test
+    public void givenAValidGame_whenCallsUpdateGameAndNotFindRound_shouldReturnNotFoundException() {
+        // given
+        final var playerId = "player1";
+        final var winningMovie = Movie.with("movie1", "Movie 1", 5.5, 100L);
+        final var loserMovie = Movie.with("movie2", "Movie 2", 8.5, 100L);
+
+        final var expectedGameId = "39fbec72-b760-11ed-afa1-0242ac120002";
+
+        final var game = Game.with(
+                UUID.fromString(expectedGameId),
+                0,
+                3,
+                List.of(),
+                playerId,
+                false);
+
+        when(gameGateway.findById(any()))
+                .thenReturn(Optional.of(
+                        game
+                ));
+
+        when(movieGateway.findById(any()))
+                .thenReturn(Optional.of(winningMovie)).thenReturn(Optional.of(loserMovie));
+
+        final var aCommand =
+                UpdateGameCommand.with(expectedGameId, winningMovie.getId() , loserMovie.getId());
+
+        // when
+        final var actualException =  Assertions.assertThrows(NotFoundException.class, () -> {
+            useCase.execute(aCommand);
+        });
+
+        // then
+        Assertions.assertNotNull(actualException);
+
+        Mockito.verify(gameGateway, times(1)).findById(any());
+        Mockito.verify(movieGateway, times(2)).findById(any());
+        Mockito.verify(gameGateway, times(0)).update(any());
+    }
+
+    @Test
+    public void givenAValidGame_whenCallsUpdateGameAndCantGenerateNewRound_shouldReturnStackOverflowError() {
+        // given
+        final var playerId = "player1";
+        final var winningMovie = Movie.with("movie1", "Movie 1", 5.5, 100L);
+        final var loserMovie = Movie.with("movie2", "Movie 2", 8.5, 100L);
+
+        final var expectedGameId = "39fbec72-b760-11ed-afa1-0242ac120002";
+        final var expectedRound = Round.with(Movie.with("movie1"), Movie.with("movie2"));
+
+        final var game = Game.with(
+                UUID.fromString(expectedGameId),
+                0,
+                0,
+                List.of(Round.with(
+                        Movie.with("movie1"),
+                        Movie.with("movie2"))
+                ),
+                playerId,
+                false);
+
+        when(gameGateway.findById(any()))
+                .thenReturn(Optional.of(
+                        game
+                ));
+
+        when(movieGateway.findById(any()))
+                .thenReturn(Optional.of(winningMovie)).thenReturn(Optional.of(loserMovie));
+
+        when(gameGateway.createRound())
+                .thenReturn(expectedRound);
+
+        final var aCommand =
+                UpdateGameCommand.with(expectedGameId, winningMovie.getId() , loserMovie.getId());
+
+        // when
+        final var actualException =  Assertions.assertThrows(DomainException.class, () -> {
+            useCase.execute(aCommand);
+        });
+
+        // then
+        Assertions.assertNotNull(actualException);
+
+        Mockito.verify(gameGateway, times(1)).findById(any());
+        Mockito.verify(movieGateway, times(2)).findById(any());
+        Mockito.verify(gameGateway, times(0)).update(any());
     }
 }
