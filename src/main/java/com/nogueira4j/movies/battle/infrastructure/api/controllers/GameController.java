@@ -8,6 +8,7 @@ import com.nogueira4j.movies.battle.application.game.update.UpdateGameUseCase;
 import com.nogueira4j.movies.battle.application.rank.get.GetRankUseCase;
 import com.nogueira4j.movies.battle.infrastructure.api.GameAPI;
 import com.nogueira4j.movies.battle.infrastructure.game.models.UpdateGameRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +33,7 @@ public class GameController implements GameAPI {
     @Override
     public ResponseEntity<?> start() {
         final var output = createGameUseCase.execute();
-        return ResponseEntity.of(Optional.of(output));
+        return ResponseEntity.status(HttpStatus.CREATED).body(Optional.of(output));
     }
 
     @Override
